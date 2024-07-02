@@ -7,9 +7,8 @@ const familyTreeSchema = new Schema<IFamilyTree>(
     name: { type: String, required: true },
     description: { type: String },
     creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    admin: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    admin: { type: Schema.Types.ObjectId, ref: "User" },
     rootNode: { type: Schema.Types.ObjectId, ref: "Node", required: true },
-    createdAt: { type: Date, default: Date.now },
   },
   {
     timestamps: true,

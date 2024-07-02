@@ -3,10 +3,12 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/Index.ts"
   },
   "dependencies": {
+    "@elysiajs/jwt": "^1.0.2",
     "@types/bcrypt": "^5.0.2",
+    "bcrypt": "^5.1.1",
     "elysia": "latest",
     "mongoose": "^8.4.4"
   },
