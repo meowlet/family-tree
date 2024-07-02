@@ -14,7 +14,6 @@ export interface IFamilyTree {
   creator: Types.ObjectId | string;
   admin: Types.ObjectId | string;
   rootNode: Types.ObjectId | string;
-  createdAt: Date;
 }
 
 export interface INode {
@@ -37,5 +36,4 @@ export interface IEditHistory {
 export interface IBackup {
   familyTree: Types.ObjectId | string;
   user: Types.ObjectId | string;
-  backupDate: Date;
 }
