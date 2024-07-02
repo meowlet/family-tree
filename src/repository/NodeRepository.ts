@@ -21,7 +21,7 @@ export class NodeRepository {
   }
 
   async getNodesOfATree(treeId: string) {
-    return await Node.find({ tree: treeId });
+    return await Node.find({ familyTree: treeId });
   }
 
   async createNode(node: INode) {
