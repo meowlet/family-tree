@@ -1,6 +1,9 @@
-export function getErrorMessage(error: unknown) {
-  if (error instanceof Error) return error.message;
-  return String(error);
+export function sendErrorResponse(errorCode: string, errorMessage: string) {
+  const response = {
+    code: errorCode,
+    message: errorMessage,
+  };
+  return JSON.stringify(response);
 }
 
 export class ForbiddenError extends Error {

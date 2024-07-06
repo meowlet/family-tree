@@ -5,7 +5,6 @@ export interface IUser {
   passwordHash: string;
   email: string;
   fullName: string;
-  birthDate: Date;
 }
 
 export interface IFamilyTree {
@@ -22,6 +21,9 @@ export interface INode {
   parentNode: Types.ObjectId | string;
   spouse: Types.ObjectId | string;
   gender: boolean;
+  birthDate: Date;
+  deathDate: Date;
+  marriageDate: Date;
 }
 
 export interface IEditHistory {

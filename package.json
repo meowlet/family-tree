@@ -6,6 +6,7 @@
     "dev": "bun run --watch src/Index.ts"
   },
   "dependencies": {
+    "@elysiajs/cors": "^1.0.2",
     "@elysiajs/jwt": "^1.0.2",
     "@types/bcrypt": "^5.0.2",
     "bcrypt": "^5.1.1",

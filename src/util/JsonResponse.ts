@@ -1,23 +1,16 @@
 export class JsonResponse {
   private data: any;
+  private message: string;
 
-  constructor(data: any) {
+  constructor(data: any, message: string) {
     this.data = data;
-  }
-  processObject(obj: object): string {
-    return JSON.stringify(obj);
-  }
-  processObjectArray(objArray: object[]): string {
-    return JSON.stringify(objArray);
+    this.message = message;
   }
 
-  processData(): any {
-    if (Array.isArray(this.data)) {
-      return this.processObjectArray(this.data);
-    } else if (typeof this.data === "object") {
-      return this.processObject(this.data);
-    } else {
-      return this.data;
-    }
+  public toJson() {
+    return JSON.stringify({
+      data: this.data,
+      message: this.message,
+    });
   }
 }
