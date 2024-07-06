@@ -3,6 +3,7 @@ import Elysia from "elysia";
 import { NodeRepository } from "../repository/NodeRepository";
 import { AuthorizationError } from "../util/Error";
 import { TreeRepository } from "../repository/TreeRepository";
+import { UserRepository } from "../repository/UserRepository";
 
 export const AuthPlugin = async (app: Elysia) =>
   app
@@ -26,6 +27,7 @@ export const AuthPlugin = async (app: Elysia) =>
         return {
           nodeRepository: new NodeRepository(decodedToken.userId as string),
           treeRepository: new TreeRepository(decodedToken.userId as string),
+          userRepository: new UserRepository(decodedToken.userId as string),
         };
       }
     });

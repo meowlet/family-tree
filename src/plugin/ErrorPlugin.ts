@@ -3,7 +3,7 @@ import {
   AuthorizationError,
   ForbiddenError,
   ConflictedError,
-  getErrorMessage,
+  sendErrorResponse,
 } from "../util/Error";
 
 export const ErrorPlugin = (app: Elysia) =>
@@ -15,37 +15,33 @@ export const ErrorPlugin = (app: Elysia) =>
       switch (code) {
         case "CONFLICTED": {
           set.status = 409;
-          return getErrorMessage(error);
+          return sendErrorResponse("CONFLICTED", error.message);
         }
         case "FORBIDDEN": {
           set.status = 403;
-          return getErrorMessage(error);
+          return sendErrorResponse("FORBIDDEN", error.message);
         }
         case "AUTHORIZATION_ERROR": {
           set.status = 401;
-          return getErrorMessage(error);
+          return sendErrorResponse("AUTHORIZATION_ERROR", error.message);
         }
         default: {
           if (code === "NOT_FOUND") {
             set.status = 404;
-            return getErrorMessage(error);
+            return sendErrorResponse("NOT_FOUND", error.message);
           } else if (code === "VALIDATION") {
-            console.log(new Date());
             set.status = 400;
-            console.log(getErrorMessage(error));
-            return "Validation Error :(";
+            console.log(error);
+            return sendErrorResponse("VALIDATION", "Validation Error :(");
           } else if (code === "PARSE") {
             set.status = 422;
-            console.log(getErrorMessage(error));
-            return "Parse Error :(";
+            return sendErrorResponse("PARSE", "Invalid JSON :(");
           } else if (code === "UNKNOWN") {
             set.status = 520;
-            console.log(getErrorMessage(error));
-            return "An unknown error occured :(";
+            return sendErrorResponse("UNKNOWN", "Unknown Error :(");
           } else {
             set.status = 500;
-            console.log(getErrorMessage(error));
-            return new Response(`Internal Server Error`);
+            return new Response(sendErrorResponse("UNKNOWN", error.message));
           }
         }
       }
