@@ -13,6 +13,9 @@ const nodeSchema = new Schema<INode>(
     parentNode: { type: Schema.Types.ObjectId, ref: "Node", default: null },
     spouse: { type: Schema.Types.ObjectId, ref: "Node", default: null },
     gender: { type: Boolean, required: true },
+    birthDate: { type: Date, required: true },
+    deathDate: { type: Date, default: null },
+    marriageDate: { type: Date, default: null },
   },
   {
     timestamps: true,
