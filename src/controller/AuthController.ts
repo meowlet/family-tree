@@ -19,7 +19,10 @@ export const AuthController = new Elysia()
       const token = await jwt.sign({
         userId: user._id.toString(),
       });
-      return token;
+      return new JsonResponse(
+        { token },
+        `Sucessfully signed in as ${user.userName}`,
+      ).toJson();
     },
     { body: t.Object({ identifier: t.String(), password: t.String() }) },
   )
@@ -31,12 +34,11 @@ export const AuthController = new Elysia()
         email: body.email,
         fullName: body.fullName,
         passwordHash: body.passwordHash,
-        birthDate: new Date(body.birthDate),
       });
 
       await authRepository.signUp(newUser);
       console.log(newUser);
-      return new JsonResponse(newUser).processData();
+      return new JsonResponse(newUser, "Sign up sucessfully").toJson();
     },
     {
       body: t.Object({
@@ -44,7 +46,6 @@ export const AuthController = new Elysia()
         email: t.String(),
         fullName: t.String(),
         passwordHash: t.String(),
-        birthDate: t.String(),
       }),
     },
   );
