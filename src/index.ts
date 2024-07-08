@@ -6,8 +6,10 @@ import { TreeController } from "./controller/TreeController";
 import { NodeController } from "./controller/NodeController";
 import cors from "@elysiajs/cors";
 import { UserController } from "./controller/UserController";
+import swagger from "@elysiajs/swagger";
 
 const app = new Elysia()
+  .use(swagger())
   .use(ErrorPlugin)
   .use(cors())
   .group("/api", (app) =>
@@ -17,7 +19,9 @@ const app = new Elysia()
       .use(NodeController)
       .group("/user", (app) => app.use(UserController)),
   )
-  .get("/", () => "Hello Elysia")
+  .get("/", ({ body }) => {
+    console.log(body);
+  })
   .listen(3000);
 
 console.log(

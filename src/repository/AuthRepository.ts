@@ -6,7 +6,8 @@ import { User } from "../model/User";
 export class AuthRepository {
   async signUp(user: IUser) {
     try {
-      await User.create(user);
+      const newUser = await User.create(user);
+      return newUser;
     } catch (error: any) {
       if (error.name === "MongoServerError" && error.code === 11000) {
         throw new ConflictedError("Username or email already exists!");

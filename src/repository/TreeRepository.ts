@@ -2,7 +2,7 @@ import { FamilyTree } from "../model/FamilyTree";
 import { Node } from "../model/Node";
 import { User } from "../model/User";
 import { IFamilyTree, IUser } from "../util/Entity";
-import { AuthorizationError } from "../util/Error";
+import { AuthorizationError, ForbiddenError } from "../util/Error";
 
 export class TreeRepository {
   public userId: string;
@@ -26,10 +26,18 @@ export class TreeRepository {
   }
 
   async getTree(treeId: string) {
-    const treeInfo = await FamilyTree.findOne({ _id: treeId });
+    const treeInfo = await FamilyTree.findOne({
+      _id: treeId,
+      creator: this.userId,
+    });
     const treeNodes = await Node.find({ familyTree: treeId }).populate<{
       user: IUser;
     }>("user");
+
+    if (!treeInfo) {
+      throw new ForbiddenError("You are not authorized to view this tree");
+    }
+
     return {
       treeInfo,
       treeNodes,
@@ -38,5 +46,17 @@ export class TreeRepository {
 
   async getTrees() {
     return FamilyTree.find({ creator: this.userId });
+  }
+
+  async deleteTree(treeId: string) {
+    const deletedTree = await FamilyTree.findOneAndDelete({
+      $and: [{ _id: treeId }, { creator: this.userId }],
+    });
+
+    if (!deletedTree) {
+      throw new ForbiddenError("You are not authorized to delete this tree");
+    }
+
+    return deletedTree;
   }
 }
