@@ -17,7 +17,10 @@ export const TreeController = (app: Elysia) =>
           admin: treeRepository.userId,
           rootNode: new Types.ObjectId(),
         });
-        treeRepository.createTree(tree);
+        return new JsonResponse(
+          await treeRepository.createTree(tree),
+          "Tree created successfully",
+        ).toJson();
       },
       {
         body: t.Object({
@@ -26,6 +29,12 @@ export const TreeController = (app: Elysia) =>
         }),
       },
     )
+    .delete("/tree/:treeId", async ({ treeRepository, params }) => {
+      return new JsonResponse(
+        await treeRepository.deleteTree(params.treeId),
+        "Tree deleted successfully",
+      ).toJson();
+    })
     .get("/tree/:treeId", async ({ treeRepository, params }) => {
       return new JsonResponse(
         await treeRepository.getTree(params.treeId),

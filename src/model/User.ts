@@ -5,10 +5,12 @@ import bcrypt from "bcrypt";
 
 const userSchema = new Schema<IUser>(
   {
-    userName: { type: String, required: true, unique: true },
-    passwordHash: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    userName: { type: String, unique: true },
+    passwordHash: { type: String },
+    email: { type: String, unique: true },
     fullName: { type: String, required: true },
+    bio: { type: String },
+    homeTown: { type: String },
   },
   {
     timestamps: true,

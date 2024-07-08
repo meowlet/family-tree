@@ -3,6 +3,7 @@ import { authRepository } from "../repository/AuthRepository";
 import jwt from "@elysiajs/jwt";
 import { User } from "../model/User";
 import { JsonResponse } from "../util/JsonResponse";
+import { Types } from "mongoose";
 
 export const AuthController = new Elysia()
   .use(
@@ -36,9 +37,10 @@ export const AuthController = new Elysia()
         passwordHash: body.passwordHash,
       });
 
-      await authRepository.signUp(newUser);
-      console.log(newUser);
-      return new JsonResponse(newUser, "Sign up sucessfully").toJson();
+      return new JsonResponse(
+        await authRepository.signUp(newUser),
+        "Sign up sucessfully",
+      ).toJson();
     },
     {
       body: t.Object({
@@ -46,6 +48,31 @@ export const AuthController = new Elysia()
         email: t.String(),
         fullName: t.String(),
         passwordHash: t.String(),
+      }),
+    },
+  )
+  .post(
+    "/signup/temp",
+    async ({ body }) => {
+      const newUser = new User({
+        userName: new Types.ObjectId(),
+        email: `${new Types.ObjectId()}@temp.com`,
+        fullName: body.fullName,
+        bio: body.bio,
+        homeTown: body.homeTown,
+      });
+
+      await authRepository.signUp(newUser);
+      return new JsonResponse(
+        await authRepository.signUp(newUser),
+        "Succesfully created a new tempoary user",
+      ).toJson();
+    },
+    {
+      body: t.Object({
+        fullName: t.String(),
+        bio: t.String(),
+        homeTown: t.String(),
       }),
     },
   );

@@ -4,7 +4,9 @@ export interface IUser {
   userName: string;
   passwordHash: string;
   email: string;
+  bio: string;
   fullName: string;
+  homeTown: string;
 }
 
 export interface IFamilyTree {
@@ -18,7 +20,7 @@ export interface IFamilyTree {
 export interface INode {
   familyTree: Types.ObjectId | string;
   user: Types.ObjectId | string;
-  parentNode: Types.ObjectId | string;
+  parentNode: Types.ObjectId | string | null;
   spouse: Types.ObjectId | string;
   gender: boolean;
   birthDate: Date;
