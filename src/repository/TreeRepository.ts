@@ -56,17 +56,14 @@ export class TreeRepository {
   }
 
   async getTrees() {
-    // Tìm cây mà người dùng đã tạo
     const createdTrees = await FamilyTree.find({ creator: this.userId });
 
-    // Tìm cây mà người dùng là thành viên
     const memberNodes = await Node.find({ user: this.userId });
     const memberTreeIds = memberNodes.map((node) => node.familyTree);
 
-    // Tìm thông tin của cây mà người dùng là thành viên
     const memberTrees = await FamilyTree.find({
       _id: { $in: memberTreeIds },
-      creator: { $ne: this.userId }, // Loại bỏ cây mà người dùng đã tạo để tránh trùng lặp
+      creator: { $ne: this.userId },
     });
 
     return {
