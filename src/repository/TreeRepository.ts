@@ -28,13 +28,24 @@ export class TreeRepository {
   async getTree(treeId: string) {
     const treeInfo = await FamilyTree.findOne({
       _id: treeId,
-      creator: this.userId,
     });
+
     const treeNodes = await Node.find({ familyTree: treeId }).populate<{
       user: IUser;
     }>("user");
 
+    const myNode = treeNodes.find(
+      (node) =>
+        (node.user as any)._id.toString() === this.userId ||
+        treeInfo?.creator === this.userId ||
+        treeInfo?.admin.toString() === this.userId,
+    );
+
     if (!treeInfo) {
+      throw new AuthorizationError("Tree not found");
+    }
+
+    if (!myNode && !treeInfo) {
       throw new ForbiddenError("You are not authorized to view this tree");
     }
 
@@ -45,7 +56,23 @@ export class TreeRepository {
   }
 
   async getTrees() {
-    return FamilyTree.find({ creator: this.userId });
+    // Tìm cây mà người dùng đã tạo
+    const createdTrees = await FamilyTree.find({ creator: this.userId });
+
+    // Tìm cây mà người dùng là thành viên
+    const memberNodes = await Node.find({ user: this.userId });
+    const memberTreeIds = memberNodes.map((node) => node.familyTree);
+
+    // Tìm thông tin của cây mà người dùng là thành viên
+    const memberTrees = await FamilyTree.find({
+      _id: { $in: memberTreeIds },
+      creator: { $ne: this.userId }, // Loại bỏ cây mà người dùng đã tạo để tránh trùng lặp
+    });
+
+    return {
+      createdTrees,
+      memberTrees,
+    };
   }
 
   async deleteTree(treeId: string) {

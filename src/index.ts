@@ -4,14 +4,19 @@ import { ErrorPlugin } from "./plugin/ErrorPlugin";
 import { AuthController } from "./controller/AuthController";
 import { TreeController } from "./controller/TreeController";
 import { NodeController } from "./controller/NodeController";
-import cors from "@elysiajs/cors";
 import { UserController } from "./controller/UserController";
 import swagger from "@elysiajs/swagger";
+import cors from "@elysiajs/cors";
 
 const app = new Elysia()
   .use(swagger())
   .use(ErrorPlugin)
-  .use(cors())
+  .use(
+    cors({
+      origin: "http://localhost:3001",
+      allowedHeaders: ["Content-Type", "Authorization"],
+    }),
+  )
   .group("/api", (app) =>
     app
       .group("/auth", (app) => app.use(AuthController))

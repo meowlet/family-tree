@@ -52,28 +52,32 @@ export class NodeRepository {
   async newSpouse(
     firstOneNodeId: string,
     secondOneUserId: string,
-    marriageDate: string
+    marriageDate: string,
   ) {
     console.log(firstOneNodeId, secondOneUserId, marriageDate);
     const firstOne = await Node.findOne({ _id: firstOneNodeId });
-    const secondOne = await Node.findOne({ user: secondOneUserId });
+    const secondOne = await User.findOne({ _id: secondOneUserId });
 
     if (!firstOne || !secondOne) {
       throw new NotFoundError("Node not found");
     }
 
-    if (firstOne.spouse && firstOne.spouse === secondOneUserId) {
+    const secondOneNode = new Node({
+      user: secondOne._id,
+      familyTree: firstOne.familyTree,
+      spouse: firstOne._id,
+      marriageDate: new Date(marriageDate),
+      birthDate: new Date(),
+      gender: !firstOne.gender,
+    });
+
+    if (firstOne.spouse && firstOne.spouse === secondOneNode._id.toString()) {
       throw new ConflictedError("They are already spouses");
     }
 
-    firstOne.spouse = secondOneUserId;
+    firstOne.spouse = secondOneNode._id;
     firstOne.marriageDate = new Date(marriageDate);
 
-    secondOne.spouse = firstOneNodeId;
-    secondOne.marriageDate = new Date(marriageDate);
-    secondOne.familyTree = firstOne.familyTree;
-    secondOne.parentNode = null;
-
-    return [await firstOne.save(), await secondOne.save()];
+    return [await firstOne.save(), await secondOneNode.save()];
   }
 }
