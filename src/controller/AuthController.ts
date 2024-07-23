@@ -75,4 +75,24 @@ export const AuthController = new Elysia()
         homeTown: t.String(),
       }),
     },
+  )
+  .post(
+    "/password/reset",
+    async ({ body }) => {
+      return new JsonResponse(
+        await authRepository.sendPasswordReset(body.identifier),
+        "Password reset email sent",
+      ).toJson();
+    },
+    { body: t.Object({ identifier: t.String() }) },
+  )
+  .post(
+    "/password/reset/:token",
+    async ({ body, params }) => {
+      return new JsonResponse(
+        await authRepository.resetPassword(params.token, body.password),
+        "Password resets sucessfully",
+      ).toJson();
+    },
+    { body: t.Object({ password: t.String() }) },
   );

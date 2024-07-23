@@ -38,6 +38,7 @@ export const ErrorPlugin = (app: Elysia) =>
             return sendErrorResponse("PARSE", "Invalid JSON :(");
           } else if (code === "UNKNOWN") {
             set.status = 520;
+            console.error(error);
             return sendErrorResponse("UNKNOWN", "Unknown Error :(");
           } else {
             set.status = 500;

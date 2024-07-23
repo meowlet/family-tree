@@ -42,11 +42,26 @@ export class NodeRepository {
   }
 
   async deleteNode(nodeId: string) {
-    const deletedNode = await Node.deleteOne({ _id: nodeId });
+    const deletedNode = await Node.findOne({ _id: nodeId });
     if (!deletedNode) {
       throw new AuthorizationError("Node not found");
     }
-    return deletedNode;
+
+    deletedNode.user = "999999999999999999999999";
+
+    return deletedNode.save();
+  }
+
+  async updateNode(nodeId: string, node: Partial<INode>) {
+    console.log(nodeId, node);
+
+    const updatedNode = await Node.findOneAndUpdate({ _id: nodeId }, node, {
+      new: true,
+    });
+    if (!updatedNode) {
+      throw new NotFoundError("Node not found");
+    }
+    return updatedNode;
   }
 
   async newSpouse(

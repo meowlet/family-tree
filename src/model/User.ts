@@ -17,10 +17,30 @@ const userSchema = new Schema<IUser>(
   },
 );
 
-userSchema.pre("save", async function (next) {
+async function hashPassword(password: string): Promise<string> {
   const saltRound = 8;
+  return bcrypt.hash(password, saltRound);
+}
+
+userSchema.pre("save", async function (next) {
   if (this.isModified("passwordHash")) {
-    this.passwordHash = await bcrypt.hash(this.passwordHash, saltRound);
+    this.passwordHash = await hashPassword(this.passwordHash);
+  }
+  next();
+});
+
+userSchema.pre("updateOne", async function (next) {
+  const update = this.getUpdate() as { passwordHash?: string };
+  if (update.passwordHash) {
+    update.passwordHash = await hashPassword(update.passwordHash);
+  }
+  next();
+});
+
+userSchema.pre("findOneAndUpdate", async function (next) {
+  const update = this.getUpdate() as { passwordHash?: string };
+  if (update.passwordHash) {
+    update.passwordHash = await hashPassword(update.passwordHash);
   }
   next();
 });

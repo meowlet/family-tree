@@ -36,7 +36,7 @@ export class TreeRepository {
 
     const myNode = treeNodes.find(
       (node) =>
-        (node.user as any)._id.toString() === this.userId ||
+        (node.user as any)?._id.toString() === this.userId ||
         treeInfo?.creator === this.userId ||
         treeInfo?.admin.toString() === this.userId,
     );
